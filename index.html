@@ -104,11 +104,11 @@ span.red{
     span.quote,.quote-2{
         font-style: italic;
         font-family: serif;
-        font-size:3.3vw;
+        font-size:3.6vw;
     }
 
     h3.name{
-        font-size: 4.5vw;
+        font-size: 4.8vw;
         font-family: 'Source Sans Pro', sans-serif;
         line-height: 100%;
         margin-bottom: -1%;
@@ -366,9 +366,9 @@ span.red{
     	<strong>Source | </strong><a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a></p>
         <p class='brief'>On 15 July 2016, a coup d'état was attempted in Turkey against the government. After that, coup has been a popular topic among the public as well as media. But what's the definition of coup? How do we define a successful coup?
         <br>
-        With the data from <a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a>, the graphic below present all coups from 1950 to 2010. <span class='special'>Hover over the square</span> you would find more details!
+        With the data from <a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a>, the graphic below presents all coups from 1950 to 2010. <span class='special'>Hover over the square</span> you would find more details!
         <br>
-        Click on the <span class='special'>scholar's name</span> to expore more about scholar's theory on bottom. Below the graphic you can see various definition from different scholars about coup as well as the article about it. While inside the graphic, <span class='blue'>blue squares</span> represent the successful coups under the selected scholar's theory, and the <span class='red'>red squares</span> represent the unsuccessful ones.
+        Bellow is a list of all scholars from the article, who had studies related to coups over years. Click on the <span class='special'>scholar's name</span> to expore more about scholar's theory on. Below the graphic you can see various definition from different scholars about coup as well as the article about it. While inside the graphic, <span class='blue'>blue squares</span> represent the successful coups under the selected scholar's theory, and the <span class='red'>red squares</span> represent the unsuccessful ones, <span class='special'>gray squares </span>indicate that the coup is not included in the scholar's study.
 
         </p>
 
@@ -584,7 +584,7 @@ span.red{
                             .append("div")
                             .attr("class", "tooltip");
 
-	d3.csv("withid.csv", function(error, data) {
+	d3.csv("withid2.csv", function(error, data) {
 /*		console.log("original dataset",data)*/
 
 		var dataset =  d3.nest()
