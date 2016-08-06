@@ -363,10 +363,10 @@ span.red{
 <body>
 <div class="everything">
     <div class='intro'>
-    	<h1>Successful or Not? It's a Question</h1>
+        <h1>Successful or Not? It's a Question</h1>
         <h2>—— A brief introduction to coups from 1950 to 2010</h2>
         <p class='source'><strong>Graphic by | </strong><a href="http://www.zhizhouwang.me">Zhizhou Wang</a> </br>
-    	<strong>Source | </strong><a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a></p>
+        <strong>Source | </strong><a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a></p>
         <p class='brief'>On 15 July 2016, a coup d'état was attempted in Turkey against the government. After that, coup has been a popular topic among the public as well as media. But what's the definition of coup? How do we define a successful coup?
         <br>
         With the data from <a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a>, the graphic below presents all coups from 1950 to 2010. <span class='special'>Hover over the square</span> you would find more details!
@@ -392,7 +392,7 @@ span.red{
         <button type="button" id='lunde'>Lunde</button>
         <button type="button" id='world_hand'>Taylor and Jodice</button>
     </div>
-	
+    
     <div id="viz"></div>
 
     <div class='content' id='mcgowan'>
@@ -552,19 +552,12 @@ span.red{
 </div>
 
 
-</body>	
+</body> 
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"></script> 
 
 <script type="text/javascript">
-
-	// var fullwidth = 1000;
-	// 	fullheight = 500;
-	// 	margin = {top: 20, right: 10, bottom: 40, left:10};
-		// var width = fullwidth - margin.left - margin.right;
-		//   height = fullheight - margin.top - margin.bottom;
-
 
     var margin = 20,
         width = parseInt(d3.select("#viz").style("width")),
@@ -576,45 +569,57 @@ span.red{
     var selected = null;
 
 
-	var svg = d3.select("#viz")
-						.append("svg")
-						.attr("width", width)
-						.attr("height", height)
-						.append("g");
-						// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    var svg = d3.select("#viz")
+                        .append("svg")
+                        .attr("width", width)
+                        .attr("height", height)
+                        .append("g");
+                        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var tooltip = d3.select("body")
                             .append("div")
                             .attr("class", "tooltip");
 
-	d3.csv("withid2.csv", function(error, data) {
-/*		console.log("original dataset",data)*/
+    
 
-		// var dataset =  d3.nest()
-		// 				.key(function(d) {
-		// 					return d.id;
-		// 				})
-  //                       .sortValues(function(a,b) { return a.year - b.year; })
-  //                       .entries(data)
-  //                       ;
+        function mouseoverFunc(d){
+                d3.select(this)
+                        .transition()
+                        .duration(300)
+                        .style("opacity", 0.3);
+                // console.log(d);
+                ver = null;
+                if (d.verified == ""){
+                    ver = "no"
+                }else{
+                    ver = 'yes'
+                }
+                duration = null
+                if (d.month >= 0 && d.day >= 0){
+                    duration = d.month+" months " + d.day + " days"
+                }else{
+                    duration = "unknown"
+                }
+                return tooltip
+                    .style("display",null)
+                    .html("<p>Country: "+d.country + "</br>Year: " + d.year + "</br>verified: " + ver + "</br>source: " + d.source + "</br>duration: " + duration + "</p>")
+            }
 
-        var dataset = data.sort( function(a, b) { parseInt(a.year) - parseInt(b.year)})
+        function mousemoveFunc(d){
+                return tooltip
+                    .style("top",(d3.event.pageY - 10) + "px")
+                    .style("left",(d3.event.pageX + 10) + "px");
+            }
 
-		console.log("new dataset",dataset)
+        function mouseoutFunc(d){
+                d3.select(this)
+                        .transition()
+                        .duration(300)
+                        .style("opacity", 0.6);
+                return tooltip
+                    .style("display","none");
+            }
 
-		rect = svg.selectAll("rect")
-                .data(dataset)
-                .enter()
-                .append("rect")
-
-        
-
-        // console.log(data[0]['mcgowan'])
-
-        // function get_color(){
-        //     return "red"
-        //     console.log()
-        // }
 
         function onclick(){
             selected = this.id
@@ -642,7 +647,6 @@ span.red{
                         return 0.6
                     }
                 })
-
             d3.selectAll('.showing').classed('content',true);
             d3.selectAll('.content').classed('showing',false);
             // d3.select("div#"+selected).attr('display','inline !important')
@@ -651,11 +655,10 @@ span.red{
             d3.selectAll('button').classed('checked',false);
             d3.select(this).classed('checked',true)
 
-        }
+        }// end of onclick
 
         d3.selectAll("button").on("click",onclick)
 
-        
         function resize() {
             width = parseInt(d3.select("#viz").style("width")) - margin,
             height = parseInt(d3.select("#viz").style("height")) - margin;
@@ -681,67 +684,50 @@ span.red{
                     .attr('id',function(d,i){
                         return i;
                     })
-                    .attr("fill",'lightgray')
+
                     .attr("opacity",0.6)
                          
-                    }
-            
-            d3.select(window).on('resize', resize); 
+        } // end of resize
 
-            resize();
+        d3.select(window).on('resize', resize); 
 
+
+
+
+        function get_data(data){
+            var mydata = data.sort( function(a, b) { return parseInt(a.year) - parseInt(b.year)})
+            return mydata
+        }
+
+        function display(error,mydata){
+            if(error){
+                console.log(error);
+            }else{
+                dataset = get_data(mydata);
+                console.log(dataset);
+
+            rect = svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
 
             rect
                 .on("mouseover", mouseoverFunc)
                 .on("mousemove", mousemoveFunc) 
                 .on("mouseout", mouseoutFunc);
 
-    })//end of csv
+            resize()
 
-        function mouseoverFunc(d){
-                d3.select(this)
-                        .transition()
-                        .duration(300)
-                        .style("opacity", 0.3);
-                // console.log(d);
-                ver = null;
-                if (d.verified == ""){
-                    ver = "no"
-                }else{
-                    ver = 'yes'
-                }
-                duration = null
-                if (d.month >= 0 && d.day >= 0){
-                    duration = d.month+" months " + d.day + " days"
-                }else{
-                    duration = "unknown"
-                }
-                return tooltip
-                    .style("display",null)
-                    .html("<p>Country: "+d.country + "</br>Year: " + d.year + "</br>verified: " + ver + "</br>source: " + d.source + "</br>duration: " + duration + "</p>")
-                    // .html("<p>Country: " + "<strong>" + d.country + "</strong>" +
-                    //         "<br>Female adolescent currently married rate: " + "<strong>" + d.femalemarriage
-                    //         + "</strong>" + "<strong>%</strong><br>Male adolescent currently married rate: " + "<strong>" + d.malemarriage + "</strong>" + "<strong>%</strong></p>");
+            rect
+                .attr("fill",'lightgray')
             }
+        }
 
-        function mousemoveFunc(d){
-                return tooltip
-                    .style("top",(d3.event.pageY - 10) + "px")
-                    .style("left",(d3.event.pageX + 10) + "px");
-            }
-
-        function mouseoutFunc(d){
-                d3.select(this)
-                        .transition()
-                        .duration(300)
-                        .style("opacity", 0.6);
-                return tooltip
-                    .style("display","none");
-            }
+        queue()
+            .defer(d3.csv,"withid2.csv")
+            .await(display)
 
 
-
-        
 
 
 
