@@ -36,12 +36,13 @@ button{
     -moz-border-radius: 0;
     border-radius: 0px;
     font-family: 'Source Sans Pro', sans-serif;
-    padding: 5px 5px 1px 5px;
+    padding: 4px 5px 1px 5px;
     border:none;
     border-bottom: solid #4682B4 2px;
     text-decoration: none;
     background-color: white;
     margin:0px;
+    margin-top: 0.2vh;
     cursor: pointer; 
     outline: 0; }
 }
@@ -56,9 +57,9 @@ button:hover{
 
 button.checked{
     border-bottom: solid #4682B4 2px;
-    background-color: rgba(70, 130, 180,0.4);
+    background-color: rgba(70, 130, 180,0.6);
 /*    transform-origin: 54% 0;*/
-    transform: rotate(-5deg);
+/*    transform: rotate(-5deg);*/
 }
 
 .tooltip {
@@ -84,6 +85,17 @@ span.blue{
 
 span.red{
     background-color: rgba(255,0,0,0.5)
+}
+
+span.selectspan{
+    background-color: rgba(211,211,211,0.6);
+    border-bottom: solid #4682B4 2px;
+    cursor:pointer;
+}
+
+span.notspan{
+    border-bottom: solid #4682B4 2px;
+    cursor:pointer;
 }
 
 @media all and (max-width: 420px) {
@@ -372,6 +384,8 @@ span.red{
         With the data from <a href="http://www.jonathanmpowell.com/coup-detat-dataset.html">Global instances of coups from 1950 to 2010: A new dataset</a>, the graphic below presents all coups from 1950 to 2010. <span class='special'>Hover over the square</span> you would find more details!
         <br>
         Bellow is a list of all scholars from the article, who had studies related to coups over years. Click on the <span class='special'>scholar's name</span> to expore more about scholar's theory on. Below the graphic you can see various definition from different scholars about coup as well as the article about it. While inside the graphic, <span class='blue'>blue squares</span> represent the successful coups under the selected scholar's theory, and the <span class='red'>red squares</span> represent the unsuccessful ones, <span class='special'>gray squares </span>indicate that the coup is not included in the scholar's study.
+        <br>
+        It's currently sorted by <span class="notspan" id='year'>year</span>, you can also sort it by <span class='notspan' id='country'>country</span>.
 
         </p>
 
@@ -555,6 +569,7 @@ span.red{
 </body> 
 <script src="//d3js.org/d3.v3.min.js"></script>
 <script src="//d3js.org/queue.v1.min.js"></script>
+<script src="isotope.pkgd.min.js"></script>
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"></script> 
 
 <script type="text/javascript">
@@ -657,7 +672,7 @@ span.red{
 
         }// end of onclick
 
-        d3.selectAll("button").on("click",onclick)
+        
 
         function resize() {
             width = parseInt(d3.select("#viz").style("width")) - margin,
@@ -691,12 +706,53 @@ span.red{
 
         d3.select(window).on('resize', resize); 
 
+        d3.select("span#year").classed("notspan",false).classed('selectspan',true)
 
+        span_selected = 'year';
 
+        function update(){      
+            rect
+                .data(dataset)
+
+            rect
+                .transition()
+                .duration(300)
+                .attr('x',function(d,i){
+                    return (i%70) * (rw+1)
+                })
+                .attr("y",function(d,i){
+                    return parseInt(i/70)*(rw+2)
+                })
+                // .attr("fill","lightgray")
+                // .attr("opacity",0.6)
+        }
+
+        d3.select("span#year").on("click",function(d){
+            span_selected="year";
+            d3.select("span#country").classed('selectspan',false).classed('notspan',true)
+            d3.select("span#year").classed("notspan",false).classed('selectspan',true)
+            dataset = get_data(dataset);
+            update()
+        })
+
+        d3.select("span#country").on("click",function(d){
+            span_selected="country";
+            d3.select("span#year").classed('selectspan',false).classed('notspan',true)
+            d3.select("span#country").classed("notspan",false).classed('selectspan',true)
+            dataset = get_data(dataset);
+            // console.log(dataset)
+            update()
+        })
 
         function get_data(data){
-            var mydata = data.sort( function(a, b) { return parseInt(a.year) - parseInt(b.year)})
-            return mydata
+            console.log(span_selected)
+            if (span_selected == "year"){
+                var mydata = data.sort( function(a, b) { return parseInt(a.year) - parseInt(b.year)})
+                return mydata
+            } else if(span_selected == "country"){
+                var mydata = data.sort( function(a, b) { return a.country.localeCompare(b.country)})
+                return mydata
+            }
         }
 
         function display(error,mydata){
@@ -706,17 +762,12 @@ span.red{
                 dataset = get_data(mydata);
                 console.log(dataset);
 
-            rect = svg.selectAll("rect")
-                .data(dataset)
-                .enter()
-                .append("rect")
+            draw_rects(dataset)
 
             rect
                 .on("mouseover", mouseoverFunc)
                 .on("mousemove", mousemoveFunc) 
                 .on("mouseout", mouseoutFunc);
-
-            resize()
 
             rect
                 .attr("fill",'lightgray')
@@ -728,7 +779,18 @@ span.red{
             .await(display)
 
 
+        function draw_rects(data){
+            // console.log(data)
 
+            rect = svg.selectAll("rect")
+                .data(dataset)
+                .enter()
+                .append("rect")
+
+            resize()
+        }
+
+        d3.selectAll("button").on("click",onclick)
 
 
     
