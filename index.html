@@ -590,13 +590,15 @@ span.red{
 	d3.csv("withid2.csv", function(error, data) {
 /*		console.log("original dataset",data)*/
 
-		var dataset =  d3.nest()
-						.key(function(d) {
-							return d.id;
-						})
-                        .sortValues(function(a,b) { return a.year - b.year; })
-                        .entries(data)
-                        ;
+		// var dataset =  d3.nest()
+		// 				.key(function(d) {
+		// 					return d.id;
+		// 				})
+  //                       .sortValues(function(a,b) { return a.year - b.year; })
+  //                       .entries(data)
+  //                       ;
+
+        var dataset = data.sort( function(a, b) { a.year - b.year })
 
 		console.log("new dataset",dataset)
 
@@ -621,9 +623,9 @@ span.red{
                 .transition()
                 .attr("fill",function(d,i){
                     // console.log(d.values[0]['mcgowan'])
-                    if (d.values[0][selected] == 1.0){
+                    if (d[selected] == 1.0){
                         return "red"
-                    } else if(d.values[0][selected] == 2.0){
+                    } else if(d[selected] == 2.0){
                         return "steelblue"
                     } else{
                         // console.log(d.values[0][selected])
@@ -631,9 +633,9 @@ span.red{
                     }
                 })
                 .attr("opacity",function(d){
-                    if (d.values[0][selected] == 1.0){
+                    if (d[selected] == 1.0){
                         return 0.6
-                    } else if(d.values[0][selected] == "2.0"){
+                    } else if(d[selected] == "2.0"){
                         return 0.6
                     } else{
                         // console.log(d.values[0][selected])
@@ -703,20 +705,20 @@ span.red{
                         .style("opacity", 0.3);
                 // console.log(d);
                 ver = null;
-                if (d.values[0].verified == ""){
+                if (d.verified == ""){
                     ver = "no"
                 }else{
                     ver = 'yes'
                 }
                 duration = null
-                if (d.values[0].month >= 0 && d.values[0].day >= 0){
-                    duration = d.values[0].month+" months " + d.values[0].day + " days"
+                if (d.month >= 0 && d.day >= 0){
+                    duration = d.month+" months " + d.day + " days"
                 }else{
                     duration = "unknown"
                 }
                 return tooltip
                     .style("display",null)
-                    .html("<p>Country: "+d.values[0].country + "</br>Year: " + d.values[0].year + "</br>verified: " + ver + "</br>source: " + d.values[0].source + "</br>duration: " + duration + "</p>")
+                    .html("<p>Country: "+d.country + "</br>Year: " + d.year + "</br>verified: " + ver + "</br>source: " + d.source + "</br>duration: " + duration + "</p>")
                     // .html("<p>Country: " + "<strong>" + d.country + "</strong>" +
                     //         "<br>Female adolescent currently married rate: " + "<strong>" + d.femalemarriage
                     //         + "</strong>" + "<strong>%</strong><br>Male adolescent currently married rate: " + "<strong>" + d.malemarriage + "</strong>" + "<strong>%</strong></p>");
