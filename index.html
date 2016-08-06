@@ -598,7 +598,7 @@ span.red{
   //                       .entries(data)
   //                       ;
 
-        var dataset = data.sort( function(a, b) { a.year - b.year })
+        var dataset = data.sort( function(a, b) { parseInt(a.year) - parseInt(b.year)})
 
 		console.log("new dataset",dataset)
 
